@@ -9,10 +9,25 @@ import { MessageSquareText } from 'lucide-react';
 import { NavLink } from 'react-router-dom'
 import { ChartNoAxesGantt } from 'lucide-react';
 import { X } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import { useDispatch,useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import {logoutuser} from '../redux/UserAuthSlice'
+import { toast } from 'react-toastify';
+
 
 const Navbar = () => {
 
     const [Sidebar, setSidebar] = useState(false)
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+    const {user} = useSelector((state)=> state.UserAuth)
+
+    const handleLogout = () => {
+        dispatch(logoutuser())
+        navigate('/login')
+        toast.success("Logged out successfully")
+    }
     return (
         <div className='w-full py-5 h-20 z-10 top-0 left-0 px-1 bg-slate-100 sm:px-20 border-b fixed border-gray-300 flex justify-between items-center'>
             <div className='px-3 text-black'>
@@ -33,8 +48,9 @@ const Navbar = () => {
                     </div>
                 </form>
                 <MessageSquareText color='grey' size={20} />
-                <NavLink to={'/profile'}><img className='w-8 h-8 cursor-pointer active:scale-95 hover:scale-105 object-cover rounded-full' src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg" alt="" /></NavLink>
+                <NavLink to={'/profile'}><img className='w-8 h-8 cursor-pointer active:scale-95 hover:scale-105 object-cover rounded-full' src={user.profilepic || "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg"} alt="" /></NavLink>
                 <ChartNoAxesGantt className='sm:hidden' onClick={() => setSidebar(!Sidebar)} color='black' />
+                <LogOut onClick={()=> handleLogout()} className='hidden sm:block active:scale-95 cursor-pointer hover:invert-100' />
 
             </div>
 
@@ -60,9 +76,9 @@ const Navbar = () => {
                 <div className=' border-t flex flex-col gap-4 pt-5 border-gray-400'>
                     <div onClick={()=>setSidebar(false)} className='w-full items-center flex justify-between py-2 px-3'>
                         <NavLink to={'/profile'} className=' text-lg  font-medium flex items-center gap-3 ml-5'>Profile</NavLink>
-                        <img className='w-10 aspect-square object-cover rounded-full' src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg" alt="" />
+                        <img className='w-10 aspect-square object-cover rounded-full' src={user.profilepic || "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg"} alt="" />
                     </div>
-                    <button className='bg-red-500 self-end active scale-95 text-white border-0 mx-auto rounded-2xl mx-auto text-lg font-semibold outline-0 w-full py-4 px-3'>Logout</button>
+                    <button onClick={()=> handleLogout()} className='bg-red-500 self-end active scale-95 text-white border-0 mx-auto rounded-2xl mx-auto text-lg font-semibold outline-0 w-full py-4 px-3'>Logout</button>
                 </div>
 
             </div>
